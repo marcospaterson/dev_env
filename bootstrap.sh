@@ -4,6 +4,7 @@
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+FLAKE="$DIR/flake.nix"
 
 echo "==> Step 1: Determinate Nix"
 if command -v nix >/dev/null 2>&1; then
@@ -15,17 +16,25 @@ else
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
-echo "==> Step 2: symlink this repo to ~/.dotfiles"
+echo "==> Step 2: match the username in flake.nix to this machine"
+# flake.nix pins one username. If this box uses a different user, rewrite it so
+# the homeConfigurations attr matches $USER on every future switch.
+if grep -q "user = \"${USER}\"" "$FLAKE"; then
+  echo "    already set to '$USER', nothing to do"
+else
+  sed -i "s/^\(\s*user = \"\)[^\"]*\(\".*\)$/\1${USER}\2/" "$FLAKE"
+  echo "    rewrote flake.nix to user '$USER'"
+fi
+
+echo "==> Step 3: symlink this repo to ~/.dotfiles"
 # home.nix resolves its mkOutOfStoreSymlink paths through ~/.dotfiles, so this
 # has to exist before the first switch or the build will fail to find them.
 ln -sfn "$DIR" ~/.dotfiles
 
-echo "==> Step 3: first home-manager switch"
-# home-manager isn't installed yet on a fresh box, so run it straight from the
-# release branch this once. The user config it applies is still pinned by this
-# repo's flake.lock. After this, rebuild.sh works normally.
-# "$USER" here is the attr name in flake.nix's homeConfigurations - it has to match.
-nix run github:nix-community/home-manager/release-26.05 -- \
-  switch --flake ~/.dotfiles#$USER
+echo "==> Step 4: first home-manager switch"
+# The flake pins both nixpkgs and home-manager, so running the activation
+# package directly is enough - no separate home-manager install required.
+cd "$DIR"
+nix run ".#homeConfigurations.${USER}.activationPackage"
 
 echo "==> Done. Use ./rebuild.sh for future changes."

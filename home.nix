@@ -1,4 +1,4 @@
-{ config, pkgs, user, ... }:
+{ config, pkgs, user, unstable, ... }:
 
 let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
@@ -11,6 +11,8 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
+  home.sessionPath = [ "$HOME/.opencode/bin" ];
+
   home.packages = with pkgs; [
     # cli i use constantly
     ripgrep   # fast search
@@ -19,7 +21,7 @@ in
     jq        # json on the command line
     lazygit
     neovim
-    wezterm   # was a Homebrew cask on macOS
+    unstable.herdr   # agent multiplexer that lives in your terminal
     # the font everything renders in
     nerd-fonts.hack
   ];
@@ -64,4 +66,13 @@ in
 
   home.file.".config/opencode/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  home.file.".claude/CLAUDE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  home.file.".config/github-copilot/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+
+  home.file."PLAYGROUND.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/PLAYGROUND.md";
+  home.file."PORTABILITY.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/PORTABILITY.md";
 }
