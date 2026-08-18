@@ -61,6 +61,42 @@ The two main ways to trade a trend:
 - **Trade the breakout** - enter on a strong breakout bar. Fewer, higher
   reward trades, but a higher failure rate (many breakouts fail).
 
+### Pullback counts: High 1/2/3 and Low 1/2/3
+
+Brooks numbers the pullbacks within a single trend leg. The number tells you
+where you are in the leg and how to trade it.
+
+In a **bull trend**, pullbacks make lows - they are numbered **L1, L2, L3**:
+
+- **Low 1 (L1)** - the first pullback low after the leg begins. The earliest
+  and often the most aggressive buy. In a strong trend, L1 alone can carry
+  the whole leg.
+- **Low 2 (L2)** - the second pullback low. The most common and reliable buy
+  in a strong bull trend; Brooks calls buying L2 in a strong trend a high-
+  probability trade.
+- **Low 3 (L3)** - the third pullback low. By L3 the trend is getting old;
+  the leg is likely near its end. L3 buys are lower quality and often fail,
+  and a move beyond L3 usually means the trend is over.
+
+In a **bear trend**, pullbacks are rallies that make highs - numbered
+**H1, H2, H3**, mirror-image of the above: sell H1 (aggressive), sell H2
+(reliable), sell H3 (late, lower quality).
+
+Counting rules:
+
+- Count only pullbacks that swing **against** the trend within the same leg.
+  Each pullback is a swing high (bear) or swing low (bull) that does not end
+  the leg.
+- The count **resets** when the leg ends: a new trend high/low, a trend
+  change, or the start of a new leg. A fresh leg starts counting at H1/L1.
+- A bar that continues the trend direction is not a pullback and does not
+  advance the count.
+- In practice H1/H2 and L1/L2 are the entries worth taking; H3/L3 signals the
+  move is exhausting and is a warning to stop adding to the position.
+
+In the labeling schema this is the `pullback_count` field, and the entries are
+the `PULLBACK_BUY` / `PULLBACK_SELL` setups (see setups.md).
+
 ## Trading ranges
 
 A trading range is a horizontal band of overlapping bars with no net
@@ -105,3 +141,78 @@ targets and potential reversal zones.
 
 Measured moves are approximations, not guarantees. They mark likely
 profit-taking and reversal zones, not certain outcomes.
+
+## Higher-timeframe context (the frame around the 5m)
+
+Brooks reads the 5m chart through the lens of higher timeframes. The 60m
+chart provides the bias; prior-period levels act as magnets that price is
+drawn toward and as breakout levels that matter when tested.
+
+### The 60m 20 EMA as the 5m filter
+
+- Compute the 20 EMA on the 60m candles (the "60m 20 EMA").
+- When the 5m price is **above** the 60m 20 EMA, the higher-timeframe bias is
+  LONG. Pullback buys on the 5m are favored; a pullback that reaches the 60m
+  EMA often marks a good 5m buy.
+- When the 5m price is **below** the 60m 20 EMA, the bias is SHORT. Rallies
+  are sold on the 5m; a rally that reaches the 60m EMA often marks a good 5m
+  sell.
+- When the 5m price is riding the 60m 20 EMA without a clear side, the bias
+  is FLAT.
+
+### Prior-period levels (magnets and breakout levels)
+
+These are calculated from the higher-timeframe data (daily, weekly, monthly,
+yearly) and become horizontal levels on the 5m chart:
+
+| Label | Level |
+|---|---|
+| `PDO` | Previous day open |
+| `PDH` | Previous day high |
+| `PDL` | Previous day low |
+| `PDC` | Previous day close |
+| `PWH` | Previous week high |
+| `PWL` | Previous week low |
+| `PWC` | Previous week close |
+| `PMH` | Previous month high |
+| `PML` | Previous month low |
+| `PMC` | Previous month close |
+| `PYH` | Previous year high |
+| `PYL` | Previous year low |
+| `PYC` | Previous year close |
+| `WCLOSE` | This week's close-to-date (an in-progress level) |
+
+How they behave:
+
+- **Magnets:** price is drawn toward these levels, especially the closes
+  (`PDC`, `PWC`, `PMC`, `PYC`) and the opens (`PDO`). Expect price to stall,
+  reverse, or at least slow when it reaches a close level. A pullback to a
+  prior close in the direction of the higher-timeframe bias is a high-quality
+  entry zone.
+- **Breakout levels:** the highs and lows (`PDH`, `PDL`, `PWH`, `PWL`, ...)
+  act as breakout levels. A close beyond them is a breakout; a close beyond
+  then back inside is a failed breakout (FBO) and often a reversal.
+- **Stacking:** the more prior-period levels cluster in a zone, the stronger
+  that zone. For example a previous day close sitting on a previous week high
+  is a major level.
+
+When reading the 5m, always state the nearest prior-period level above and
+below price. If a bar touches one, that is `levels_hit` in the labeling
+schema.
+
+## The 20 EMA on the 5m chart
+
+The 5m 20 EMA is the reference line of the current move.
+
+- In a **strong bull trend**, price rides above the EMA; pullbacks to it are
+  buys, and a close below it is a warning (deep pullback or trend change).
+- In a **strong bear trend**, price rides below the EMA; rallies to it are
+  sells, and a close above it is a warning.
+- In a **trading range**, price oscillates across the EMA; it has little
+  predictive value beyond marking the middle of the range.
+- A **close beyond the EMA** against the trend (bull bar closing above in a
+  bear move, or bear bar closing below in a bull move) is the first sign of a
+  possible change. Treat it as context, not a setup on its own.
+
+The EMA is a reference, never a signal. It does not create setups; it helps
+you read the always-in direction and the quality of pullbacks.

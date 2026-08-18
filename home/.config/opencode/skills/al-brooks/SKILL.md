@@ -61,11 +61,20 @@ that the always-in direction either continues or flips.
 1. **Market phase** - trend, range, or transition (see above).
 2. **Market structure** - swing highs/lows, higher highs / higher lows,
    lower highs / lower lows, legs of the move, measured moves.
-3. **Individual bars and bar patterns** - trend bar, pullback bar, doji,
+3. **Higher-timeframe context** - the 20 EMA on the 60m chart as a filter for
+   the 5m (price above it is bullish context, below it bearish), plus the
+   weekly close and the prior day / week / month / year high, low, and close
+   acting as magnets and breakout levels.
+4. **Individual bars and bar patterns** - trend bar, pullback bar, doji,
    inside/outside bar, reversal bar, signal bar, bar pairs.
-4. **Levels** - prior swing points, breakout levels, measured move targets,
-   the highs and lows of bars, the EMA (used lightly, as context only).
-5. **The setup** - the specific entry condition that follows from 1-4.
+5. **The 20 EMA on the 5m chart** - the reference line of the current move.
+   In a strong trend price rides it; pullbacks that hold it are buys (bull),
+   closes beyond it signal a deeper pullback or possible trend change.
+6. **Pullback count (H1/H2/H3, L1/L2/L3)** - the numbered pullback in the
+   current trend leg. High 1/2/3 are the rallies sold in a bear trend,
+   Low 1/2/3 are the lows bought in a bull trend. The number tells you how
+   mature the move is and how to size the entry.
+7. **The setup** - the specific entry condition that follows from 1-6.
 
 Full detail on each layer is in the reference files:
 - `reference/market-structure.md` - phase, always-in, trends, ranges, measured moves
@@ -85,11 +94,19 @@ For each bar `i`, given bars `i-10 .. i+1`:
 3. **bar_type** - one of `TREND_BULL | TREND_BEAR | PULLBACK | DOJI | INSIDE | OUTSIDE | REVERSAL | NEUTRAL`
 4. **structure** - position of the bar relative to the cycle:
    `IN_TREND | AT_RANGE_HIGH | AT_RANGE_LOW | BREAKOUT | PULLBACK | TREND_EXTENSION | NEW_SWING_HIGH | NEW_SWING_LOW`
-5. **signal_bar** - `true | false` (is this bar the trigger bar for a setup)
-6. **setup** - the setup the bar triggers, if any:
-   `PULLBACK_BUY | PULLBACK_SELL | BREAKOUT_BUY | BREAKOUT_SELL | FBO_BUY | FBO_SELL | REVERSAL_BUY | REVERSAL_SELL | RANGE_FADE_BUY | RANGE_FADE_SELL | NONE`
-7. **confidence** - `HIGH | MEDIUM | LOW` based on strength of the trend bar,
-   how clean the structure is, and whether the setup is at a key level.
+5. **hft_bias** - higher-timeframe context from the 60m 20 EMA and the prior
+   day/week/month/year closes: `LONG | SHORT | FLAT`
+6. **ema_relation** - where the bar sits relative to the 5m 20 EMA:
+   `ABOVE | BELOW | CROSSING_UP | CROSSING_DOWN | ON`
+7. **pullback_count** - the numbered pullback within the current trend leg,
+   counting bars that swing against the trend: `H1 | H2 | H3 | L1 | L2 | L3 | NONE`
+8. **levels_hit** - any prior-period levels the bar touched, comma-separated
+   subset of `PDO | PDH | PDL | PDC | PWH | PWL | PWC | PMH | PML | PMC | PYH | PYL | PYC | WCLOSE`
+9. **signal_bar** - `true | false` (is this bar the trigger bar for a setup)
+10. **setup** - the setup the bar triggers, if any:
+    `PULLBACK_BUY | PULLBACK_SELL | BREAKOUT_BUY | BREAKOUT_SELL | FBO_BUY | FBO_SELL | REVERSAL_BUY | REVERSAL_SELL | RANGE_FADE_BUY | RANGE_FADE_SELL | NONE`
+11. **confidence** - `HIGH | MEDIUM | LOW` based on strength of the trend bar,
+    how clean the structure is, and whether the setup is at a key level.
 
 Labeling rules:
 
@@ -104,6 +121,14 @@ Labeling rules:
 - Set `confidence=HIGH` only when phase, bar type, and level all agree (e.g.
   a strong bull trend bar closing above a measured-move target in a bull
   trend).
+- `pullback_count` is counted only within a single trend leg and resets when
+  the leg ends (a new swing high/low, a trend change, or a new range). A bar
+  that pushes further in the trend direction is not a pullback.
+- `hft_bias` is read from the 60m chart's 20 EMA and prior-period closes, NOT
+  from the 5m bar itself. When 60m data is unavailable, mark it `FLAT` and
+  note the absence.
+- `levels_hit` only reports levels that actually exist in the provided data.
+  Do not invent prior-period levels; if a period's data is absent, omit it.
 
 ## Usage notes
 

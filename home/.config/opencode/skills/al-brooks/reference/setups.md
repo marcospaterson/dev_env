@@ -31,6 +31,32 @@ Enter in the direction of the trend on a small pullback.
 - **Target:** prior swing high / measured move.
 - **Confidence:** HIGH in a strong trend, MEDIUM in a weak trend.
 
+The **pullback count** picks the exact entry within the leg:
+
+| Count | Trade | Notes |
+|---|---|---|
+| **L1** (bull) / **H1** (bear) | Aggressive entry on the first pullback | Best in a very strong trend; can carry the whole leg. |
+| **L2** (bull) / **H2** (bear) | The classic, most reliable entry | High probability in a strong trend. The benchmark pullback trade. |
+| **L3** (bull) / **H3** (bear) | Late, lower-quality entry | Trend is exhausting; often the last push. Prefer to skip or fade. |
+
+### Buy/sell setup with higher-timeframe confirmation
+
+Before marking any trend pullback setup, check the higher-timeframe context
+(see market-structure.md):
+
+1. **60m 20 EMA bias** - is the 5m price above (LONG bias) or below (SHORT
+   bias) it? Entering with this bias raises confidence.
+2. **Prior-period levels** - does the pullback land on a magnet (prior day /
+   week / month / year close) or a breakout level (prior high/low)? A pullback
+   that lands on a prior-period close in the trend's favor is a high-quality
+   entry.
+3. **5m 20 EMA** - does the pullback hold at or above the 5m 20 EMA in a bull
+   trend (or below in a bear trend)? If price closes beyond it against the
+   trend, the setup weakens.
+
+Raise `confidence` by one step (up to HIGH) when all three confirm, lower it
+by one when the 60m bias disagrees.
+
 ### Breakout buy / breakout sell
 
 Enter on a strong bar that breaks a defined level.
@@ -93,9 +119,13 @@ Before labeling a setup, answer all of:
 
 1. What is the **phase**? (trend, range, breakout, reversal)
 2. What is the **always-in** bias?
-3. Where is price relative to **key levels**? (range edges, swings, measured moves)
-4. Is there a credible **signal bar**? (strong trend bar, correct direction)
-5. Does the **direction** of the setup agree with phase, or is it a deliberate
-   counter-trend (reversal) bet?
+3. What is the **higher-timeframe bias**? (5m price vs 60m 20 EMA, and the
+   prior day/week/month/year closes)
+4. What is the **pullback count**? (H1/H2/H3, L1/L2/L3, or none)
+5. Where is price relative to **key levels**? (range edges, swings, measured
+   moves, prior-period highs/lows/closes, the 5m 20 EMA)
+6. Is there a credible **signal bar**? (strong trend bar, correct direction)
+7. Does the **direction** of the setup agree with phase and the higher-TF
+   bias, or is it a deliberate counter-trend (reversal) bet?
 
-If the answer to 4 is no, there is no clean setup - label NONE and move on.
+If the answer to 6 is no, there is no clean setup - label NONE and move on.
