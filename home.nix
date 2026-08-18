@@ -66,6 +66,8 @@ in
 
   home.file.".config/opencode/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  home.file.".config/opencode/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/opencode/skills";
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/github-copilot/AGENTS.md".source =
