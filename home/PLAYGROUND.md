@@ -16,7 +16,7 @@ Mark a row `[x]` when you can do it without looking at the sheet.
 
 ## 1. WezTerm
 
-Your config: rose-pine-moon theme, Hack Nerd Font, tab bar hidden when a single tab is open. Most bindings below are the **defaults** (we did not rebind them).
+Your config: Molokai theme, Hack Nerd Font, tab bar hidden when a single tab is open. Most bindings below are the **defaults** (we did not rebind them).
 
 ### 1.1 Tabs (one window, many terminals)
 
