@@ -43,4 +43,11 @@ wezterm.on("window-focus-changed", function(window)
 	window:set_config_overrides(overrides)
 end)
 
+
+config.keys = {
+  -- Turn off the default CMD-m Hide action, allowing CMD-m to
+  -- be potentially recognized and handled by the tab
+--   { key = 's', mods = 'CTRL|SHIFT', action = wezterm.action.CloseCurrentPane },
+}
+
 return config
